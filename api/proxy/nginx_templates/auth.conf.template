@@ -1,0 +1,15 @@
+upstream docker-auth {
+    server auth:8000;
+}
+
+server {
+    listen ${NGINX_PORT};
+
+    location = ${AUTH_API_PREFIX} {
+        return 302 ${AUTH_API_PREFIX}/;
+    }
+
+    location ${AUTH_API_PREFIX}/ {
+        proxy_pass         http://docker-auth/;
+    }
+}
