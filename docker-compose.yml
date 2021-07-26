@@ -14,11 +14,12 @@ services:
         container_name: proxy
     auth:
         build:
-            context: ${DIR}/auth
-            dockerfile: ${DIR}/auth/Dockerfile
+            context: ${DIR}/api/auth
+            dockerfile: ${DIR}/api/auth/Dockerfile
         volumes:
-            - ${DIR}/auth:/auth
+            - ${DIR}/api/auth:/auth
         
         container_name: auth
         environment:
             - AUTH_API_PREFIX=${AUTH_API_PREFIX}
+            
