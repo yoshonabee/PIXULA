@@ -3,3 +3,4 @@ __pycache__
 *.pem
 *.key
 *.pub
+.DS_Store
