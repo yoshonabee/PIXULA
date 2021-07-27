@@ -67,20 +67,13 @@ app = FastAPI(root_path="/api/v1/auth")
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
-
-
-
 def get_password_hash(password):
     return pwd_context.hash(password)
-
-
 
 def get_user(db, username: str):
     if username in db:
         user_dict = db[username]
         return UserInDB(**user_dict)
-
-
 
 def authenticate_user(fake_db, username: str, password: str):
     user = get_user(fake_db, username)
@@ -93,8 +86,6 @@ def authenticate_user(fake_db, username: str, password: str):
 
     return user
 
-
-
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
     if expires_delta:
@@ -105,7 +96,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-@app.get("/token_payload/")
+@app.get("/validate_token/")
 async def validate_token(token: str = Depends(oauth2_scheme)):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
@@ -115,7 +106,6 @@ async def validate_token(token: str = Depends(oauth2_scheme)):
         raise CREDENTIALS_EXCEPTION
     
     return payload
-
 
 async def get_current_user(payload: object = Depends(validate_token)):
     username: str = payload.get("sub")
@@ -156,6 +146,8 @@ async def login_for_access_token(response: Response, form_data: OAuth2PasswordRe
     )
 
     response.set_cookie(key="refresh_token",value=f"Bearer {refresh_token}", httponly=True)
+    response.set_cookie(key="isLogin", value=True)
+    response.set_cookie(key="username", value=user.username)
 
     return {"access_token": access_token, "token_type": "bearer"}
 
