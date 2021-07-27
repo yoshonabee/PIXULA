@@ -2,6 +2,10 @@ upstream docker-auth {
     server auth:8000;
 }
 
+upstream docker-frontend {
+    server frontend:3000;
+}
+
 server {
     listen ${NGINX_PORT};
 
@@ -10,6 +14,10 @@ server {
     }
 
     location ${AUTH_API_PREFIX}/ {
-        proxy_pass         http://docker-auth/;
+        proxy_pass http://docker-auth/;
+    }
+
+    location / {
+        proxy_pass http://docker-frontend;
     }
 }

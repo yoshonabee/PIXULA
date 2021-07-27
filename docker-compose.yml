@@ -22,4 +22,11 @@ services:
         container_name: auth
         environment:
             - AUTH_API_PREFIX=${AUTH_API_PREFIX}
-            
+    frontend:
+        build:
+            context: ${DIR}/frontend
+            dockerfile: ${DIR}/frontend/Dockerfile
+        volumes:
+            - ${DIR}/frontend/src:/frontend/src
+
+        container_name: frontend
